@@ -3,10 +3,9 @@ import { LoadMoreBtn } from 'components/LodaMoreBtn/LoadMoreBtn';
 import { Modal } from 'components/Modal/Modal';
 import { Component } from 'react';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import css from './ImageGallery.module.css';
+import { PixabayApi } from 'components/helpers/pixabay-api';
 import { MagnifyingGlass } from 'react-loader-spinner';
-
-const { PixabayApi } = require('components/pixabay-api/pixabay-api');
+import css from './ImageGallery.module.css';
 
 export class ImageGallery extends Component {
   state = {
