@@ -4,8 +4,9 @@ import { Modal } from 'components/Modal/Modal';
 import { Component } from 'react';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { PixabayApi } from 'components/helpers/pixabay-api';
-import { MagnifyingGlass } from 'react-loader-spinner';
+
 import css from './ImageGallery.module.css';
+import { Loader } from 'components/Loader/Loader';
 
 export class ImageGallery extends Component {
   state = {
@@ -30,22 +31,27 @@ export class ImageGallery extends Component {
     pixabayApi.q = this.props.searchQ;
     pixabayApi.page = this.state.page + 1;
     pixabayApi.getContent().then(({ hits, totalHits }) =>
-      this.setState(prev => ({
-        photos: [...prev.photos, ...hits],
-        page: prev.page + 1,
+      this.setState(prevState => ({
+        photos: [...prevState.photos, ...hits],
+        page: prevState.page + 1,
         loadMore: this.state.page < Math.floor(totalHits / 12),
       }))
     );
   };
 
-  componentDidUpdate(prevProps, _) {
+  componentDidUpdate(prevProps, prevState) {
     const pixabayApi = new PixabayApi(12);
     pixabayApi.q = this.props.searchQ;
+
     if (prevProps.searchQ !== this.props.searchQ) {
       pixabayApi
         .getContent()
         .then(({ hits, totalHits }) => {
-          this.setState({ photos: hits, isLoading: true });
+          this.setState({
+            photos: hits,
+            page: 1,
+            isLoading: true,
+          });
           if (totalHits === 0) {
             return Notify.failure(
               'Sorry, there are no images matching your search query. Please try again.'
@@ -55,34 +61,28 @@ export class ImageGallery extends Component {
           }
         })
         .catch(error => this.setState({ error: error.message }))
-        .finally(
-          this.setState({
-            isLoading: false,
-          })
-        );
+        .finally(this.setState({ isLoading: false }));
     }
   }
   render() {
     return (
       <ul className={css.gallery}>
+        {this.state.isLoading && <Loader />}
         {this.state.photos !== null && (
-          <>
-            {this.state.isLoading && <MagnifyingGlass />}
-            <ImageGalleryItem
-              photos={this.state.photos}
-              showModal={this.showModal}
-            />
-            {this.state.photos.length > 0 && this.state.loadMore && (
-              <LoadMoreBtn loadMore={this.loadMore} />
-            )}
-            {this.state.isShowModal && (
-              <Modal
-                photos={this.state.photos}
-                id={this.state.id}
-                closeModal={this.closeModal}
-              />
-            )}
-          </>
+          <ImageGalleryItem
+            photos={this.state.photos}
+            showModal={this.showModal}
+          />
+        )}
+        {this.state.photos !== null &&
+          this.state.photos.length > 0 &&
+          this.state.loadMore && <LoadMoreBtn loadMore={this.loadMore} />}
+        {this.state.isShowModal && (
+          <Modal
+            photos={this.state.photos}
+            id={this.state.id}
+            closeModal={this.closeModal}
+          />
         )}
       </ul>
     );
