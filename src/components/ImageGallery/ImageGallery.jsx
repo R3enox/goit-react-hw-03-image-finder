@@ -30,16 +30,21 @@ export class ImageGallery extends Component {
     const pixabayApi = new PixabayApi(12);
     pixabayApi.q = this.props.searchQ;
     pixabayApi.page = this.state.page + 1;
-    pixabayApi.getContent().then(({ hits, totalHits }) =>
-      this.setState(prevState => ({
-        photos: [...prevState.photos, ...hits],
-        page: prevState.page + 1,
-        loadMore: this.state.page < Math.floor(totalHits / 12),
-      }))
-    );
+    pixabayApi
+      .getContent()
+      .then(({ hits, totalHits }) =>
+        this.setState(prevState => ({
+          photos: [...prevState.photos, ...hits],
+          page: prevState.page + 1,
+          loadMore: this.state.page < Math.floor(totalHits / 12),
+          isLoading: false,
+        }))
+      )
+      .catch(error => this.setState({ error: error.message }))
+      .finally(this.setState({ isLoading: true }));
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps, _) {
     const pixabayApi = new PixabayApi(12);
     pixabayApi.q = this.props.searchQ;
 
@@ -50,7 +55,7 @@ export class ImageGallery extends Component {
           this.setState({
             photos: hits,
             page: 1,
-            isLoading: true,
+            isLoading: false,
           });
           if (totalHits === 0) {
             return Notify.failure(
@@ -61,7 +66,7 @@ export class ImageGallery extends Component {
           }
         })
         .catch(error => this.setState({ error: error.message }))
-        .finally(this.setState({ isLoading: false }));
+        .finally(this.setState({ isLoading: true }));
     }
   }
   render() {

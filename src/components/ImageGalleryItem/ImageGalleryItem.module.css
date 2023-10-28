@@ -1,6 +1,5 @@
 .photoCard {
   flex-basis: calc((100% - 120px) / 4);
-  /* height: 300px; */
 }
 
 .galleryImg {
@@ -11,7 +10,6 @@
 }
 
 .photoCard {
-  position: relative;
   overflow: hidden;
   border: 1px solid #ccc;
   border-radius: 10px;
