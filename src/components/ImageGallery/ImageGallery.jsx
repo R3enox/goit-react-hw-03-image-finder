@@ -1,12 +1,12 @@
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
-import { LoadMoreBtn } from 'components/LodaMoreBtn/LoadMoreBtn';
 import { Modal } from 'components/Modal/Modal';
 import { Component } from 'react';
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import { PixabayApi } from 'components/helpers/pixabay-api';
+// import { LoadMoreBtn } from 'components/LodaMoreBtn/LoadMoreBtn';
+// import { Notify } from 'notiflix/build/notiflix-notify-aio';
+// import { PixabayApi } from 'components/helpers/pixabay-api';
+// import { Loader } from 'components/Loader/Loader';
 
 import css from './ImageGallery.module.css';
-import { Loader } from 'components/Loader/Loader';
 
 export class ImageGallery extends Component {
   state = {
