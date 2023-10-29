@@ -11,26 +11,32 @@ import { Loader } from 'components/Loader/Loader';
 export class ImageGallery extends Component {
   state = {
     photos: [],
-    searchQ: '',
-    page: 1,
     isLoading: false,
-    error: null,
-    isShowModal: false,
     id: null,
-    loadMore: true,
   };
 
-  componentDidUpdate(_, prevState) {
-    const { page, searchQ } = this.state;
-    if (this.props.searchQ !== searchQ || page !== prevState.page) {
-      console.log('1', this.props.searchQ !== searchQ);
-      console.log('2', page !== prevState.page);
-      console.log('page', page);
-      console.log('prevState.page', prevState.page);
-      this.setState({ searchQ: this.props.searchQ });
-      this.getPhotos();
-    }
-  }
+  // state = {
+  //   photos: [],
+  //   searchQ: '',
+  //   page: 1,
+  //   isLoading: false,
+  //   error: null,
+  //   isShowModal: false,
+  //   id: null,
+  //   loadMore: true,
+  // };
+
+  // componentDidUpdate(_, prevState) {
+  //   const { page, searchQ } = this.state;
+  //   if (this.props.searchQ !== searchQ || page !== prevState.page) {
+  //     console.log('1', this.props.searchQ !== searchQ);
+  //     console.log('2', page !== prevState.page);
+  //     console.log('page', page);
+  //     console.log('prevState.page', prevState.page);
+  //     this.setState({ searchQ: this.props.searchQ });
+  //     this.getPhotos();
+  //   }
+  // }
 
   showModal = evt => {
     this.setState({ isShowModal: true, id: evt.currentTarget.id });
@@ -83,61 +89,55 @@ export class ImageGallery extends Component {
   //   }
   // }
 
-  getPhotos = async () => {
-    this.setState({ isLoading: true });
-    const pixabayApi = new PixabayApi(12);
+  // getPhotos = async () => {
+  //   this.setState({ isLoading: true });
+  //   const pixabayApi = new PixabayApi(12);
 
-    pixabayApi.q = this.props.searchQ;
-    pixabayApi.page = this.state.page;
+  //   pixabayApi.q = this.props.searchQ;
+  //   pixabayApi.page = this.state.page;
 
-    if (!this.props.searchQ) {
-      return Notify.failure(
-        'Sorry, there are no images matching your search query. Please try again.'
-      );
-    }
+  //   if (!this.props.searchQ) {
+  //     return Notify.failure(
+  //       'Sorry, there are no images matching your search query. Please try again.'
+  //     );
+  //   }
 
-    try {
-      const { totalHits, hits } = await pixabayApi.getContent();
+  //   try {
+  //     const { totalHits, hits } = await pixabayApi.getContent();
 
-      if (totalHits === 0) {
-        return Notify.failure(
-          'Sorry, there are no images matching your search query. Please try again.'
-        );
-      }
-      Notify.success(`Hooray! We found ${totalHits} images.`);
-      this.setState(prevState => ({
-        photos: [...prevState.photos, ...hits],
-        totalPages: Math.ceil(totalHits / 12),
-      }));
-    } catch (error) {
-      Notify.failure(`${error}`);
-    } finally {
-      this.setState({ isLoading: false });
-    }
-  };
+  //     if (totalHits === 0) {
+  //       return Notify.failure(
+  //         'Sorry, there are no images matching your search query. Please try again.'
+  //       );
+  //     }
+  //     Notify.success(`Hooray! We found ${totalHits} images.`);
+  //     this.setState(prevState => ({
+  //       photos: [...prevState.photos, ...hits],
+  //       totalPages: Math.ceil(totalHits / 12),
+  //     }));
+  //   } catch (error) {
+  //     Notify.failure(`${error}`);
+  //   } finally {
+  //     this.setState({ isLoading: false });
+  //   }
+  // };
 
-  loadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
-  };
+  // loadMore = () => {
+  //   this.setState(prevState => ({
+  //     page: prevState.page + 1,
+  //   }));
+  // };
 
   render() {
     return (
       <ul className={css.gallery}>
-        {this.state.isLoading && <Loader />}
-        {this.state.photos !== null && (
-          <ImageGalleryItem
-            photos={this.state.photos}
-            showModal={this.showModal}
-          />
-        )}
-        {this.state.photos !== null &&
-          this.state.photos.length > 0 &&
-          this.state.loadMore && <LoadMoreBtn loadMore={this.loadMore} />}
+        <ImageGalleryItem
+          photos={this.props.photos}
+          showModal={this.showModal}
+        />
         {this.state.isShowModal && (
           <Modal
-            photos={this.state.photos}
+            photos={this.props.photos}
             id={this.state.id}
             closeModal={this.closeModal}
           />

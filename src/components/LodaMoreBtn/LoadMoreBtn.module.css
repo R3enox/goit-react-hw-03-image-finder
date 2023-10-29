@@ -1,4 +1,7 @@
 .loadMore {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
   background-color: #4caf50;
   color: #fff;
   padding: 10px 20px;
