@@ -6,6 +6,7 @@ export class App extends Component {
   state = {
     searchQ: '',
   };
+
   handleSearch = searchQ => {
     this.setState({ searchQ });
   };

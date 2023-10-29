@@ -11,6 +11,7 @@ export class Search extends Component {
   handleSubmit = evt => {
     evt.preventDefault();
     this.props.handleSearch(this.state.value.trim());
+
     this.setState({
       value: '',
     });
